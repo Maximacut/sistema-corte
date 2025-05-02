@@ -6,7 +6,7 @@ from fastapi.middleware.cors import CORSMiddleware
 import uuid
 from datetime import datetime
 import os
-from plano_corte_engine import gerar_pdf_plano_corte, gerar_pdf_etiquetas
+from backend.plano_corte_engine import gerar_pdf_plano_corte, gerar_pdf_etiquetas
 
 app = FastAPI()
 
