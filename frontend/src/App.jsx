@@ -1,6 +1,5 @@
 
 import { useState } from "react"
-import { Pencil, Trash2 } from "lucide-react"
 
 export default function App() {
   const [cliente, setCliente] = useState("")
@@ -116,7 +115,7 @@ export default function App() {
                 <td className="p-2 border text-center">{p.chapa}</td>
                 <td className="p-2 border text-center">
                   <button onClick={() => removerPeca(i)} className="text-red-500 hover:text-red-700">
-                    <Trash2 size={16} />
+                    🗑️
                   </button>
                 </td>
               </tr>
