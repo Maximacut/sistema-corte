@@ -1,5 +1,6 @@
 
 import { useState } from "react"
+import PlanoCorteVisual from "./PlanoCorteVisual"
 
 export default function App() {
   const [cliente, setCliente] = useState("")
@@ -26,30 +27,12 @@ export default function App() {
     setPecas(pecas.filter((_, i) => i !== index))
   }
 
-  async function gerarPlano() {
-    const pecasExpandida = []
-    pecas.forEach(p => {
-      for (let i = 0; i < parseInt(p.quantidade); i++) {
-        pecasExpandida.push({
-          nome: p.nome,
-          largura: parseInt(p.largura),
-          altura: parseInt(p.altura),
-          fita_borda: p.fita_borda,
-          veio: p.veio,
-          fitaTipo: p.fitaTipo,
-          chapa: p.chapa
-        })
-      }
-    })
-
-    const resposta = await fetch(`${import.meta.env.VITE_API_URL}/api/gerar-plano`, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ cliente, pecas: pecasExpandida })
-    })
-    const data = await resposta.json()
-    setResposta(data)
-  }
+  const pecasSimuladas = [
+    { nome: "Base", largura: 600, altura: 400, x: 10, y: 10, cor: "#cce5ff" },
+    { nome: "Lateral", largura: 600, altura: 400, x: 620, y: 10, cor: "#fff3cd" },
+    { nome: "Fundo", largura: 800, altura: 300, x: 10, y: 420, cor: "#d4edda" },
+    { nome: "Divisória", largura: 400, altura: 300, x: 820, y: 420, cor: "#f8d7da" },
+  ]
 
   return (
     <div className="p-6 max-w-6xl mx-auto">
@@ -89,52 +72,11 @@ export default function App() {
         <button className="bg-blue-600 text-white px-3 rounded" onClick={adicionarPeca}>Adicionar</button>
       </div>
 
-      <div className="overflow-x-auto">
-        <table className="min-w-full text-sm border">
-          <thead>
-            <tr className="bg-gray-100">
-              <th className="p-2 border">Nome</th>
-              <th className="p-2 border">Largura</th>
-              <th className="p-2 border">Altura</th>
-              <th className="p-2 border">Qtd</th>
-              <th className="p-2 border">Veio</th>
-              <th className="p-2 border">Fita</th>
-              <th className="p-2 border">Chapa</th>
-              <th className="p-2 border">Ações</th>
-            </tr>
-          </thead>
-          <tbody>
-            {pecas.map((p, i) => (
-              <tr key={i} className="border-b hover:bg-gray-50">
-                <td className="p-2 border text-center">{p.nome}</td>
-                <td className="p-2 border text-center">{p.largura}</td>
-                <td className="p-2 border text-center">{p.altura}</td>
-                <td className="p-2 border text-center">{p.quantidade}</td>
-                <td className="p-2 border text-center">{p.veio}</td>
-                <td className="p-2 border text-center">{p.fitaTipo}</td>
-                <td className="p-2 border text-center">{p.chapa}</td>
-                <td className="p-2 border text-center">
-                  <button onClick={() => removerPeca(i)} className="text-red-500 hover:text-red-700">
-                    🗑️
-                  </button>
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-      </div>
+      <PlanoCorteVisual pecas={pecasSimuladas} />
 
       <div className="mt-6">
-        <button className="bg-green-600 text-white px-4 py-2 rounded" onClick={gerarPlano}>Gerar Plano de Corte</button>
+        <button className="bg-green-600 text-white px-4 py-2 rounded" onClick={() => alert('Integração futura')}>Gerar Plano de Corte</button>
       </div>
-
-      {resposta && (
-        <div className="mt-6 text-sm">
-          <h3 className="font-bold">Resultado:</h3>
-          <a className="text-blue-600 underline" href={import.meta.env.VITE_API_URL + resposta.plano_pdf_url} target="_blank">📄 Baixar Plano PDF</a><br />
-          <a className="text-blue-600 underline" href={import.meta.env.VITE_API_URL + resposta.etiquetas_pdf_url} target="_blank">🏷️ Baixar Etiquetas PDF</a>
-        </div>
-      )}
     </div>
   )
 }
