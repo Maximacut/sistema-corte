@@ -6,15 +6,7 @@ from fastapi.middleware.cors import CORSMiddleware
 import uuid
 from datetime import datetime
 import os
-
-# MOCK: substitua por import real da lógica se estiver usando
 from plano_corte_engine import gerar_pdf_plano_corte, gerar_pdf_etiquetas
-    with open(path, "wb") as f:
-        f.write(b"%PDF-1.4 plano gerado")
-
-from plano_corte_engine import gerar_pdf_plano_corte, gerar_pdf_etiquetas
-    with open(path, "wb") as f:
-        f.write(b"%PDF-1.4 etiquetas geradas")
 
 app = FastAPI()
 
@@ -22,7 +14,7 @@ app.add_middleware(
     CORSMiddleware,
     allow_origins=["*"],
     allow_methods=["*"],
-    allow_headers=["*"]
+    allow_headers=["*"],
 )
 
 class Peca(BaseModel):
