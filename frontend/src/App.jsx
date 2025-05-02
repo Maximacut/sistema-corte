@@ -1,5 +1,6 @@
 
 import { useState } from "react"
+import { Pencil, Trash2 } from "lucide-react"
 
 export default function App() {
   const [cliente, setCliente] = useState("")
@@ -20,6 +21,10 @@ export default function App() {
     if (!nova.nome || !nova.largura || !nova.altura) return
     setPecas([...pecas, nova])
     setNova({ ...nova, nome: "", largura: "", altura: "", quantidade: 1 })
+  }
+
+  function removerPeca(index) {
+    setPecas(pecas.filter((_, i) => i !== index))
   }
 
   async function gerarPlano() {
@@ -48,70 +53,80 @@ export default function App() {
   }
 
   return (
-    <div className="p-6 max-w-5xl mx-auto">
-      <h1 className="text-2xl font-bold mb-4">Plano de Corte - Maximacut</h1>
+    <div className="p-6 max-w-6xl mx-auto">
+      <h1 className="text-3xl font-bold mb-6">Plano de Corte - Maximacut</h1>
 
-      <div className="mb-4">
-        <label className="block text-sm font-medium">Cliente:</label>
-        <input
-          type="text"
-          value={cliente}
-          onChange={(e) => setCliente(e.target.value)}
-          className="border p-2 w-full"
-        />
+      <div className="grid grid-cols-3 gap-4 mb-4">
+        <div className="col-span-1">
+          <label className="block text-sm font-semibold mb-1">Cliente</label>
+          <input
+            type="text"
+            value={cliente}
+            onChange={(e) => setCliente(e.target.value)}
+            className="border rounded p-2 w-full"
+          />
+        </div>
       </div>
 
-      <div className="grid grid-cols-9 gap-2 mb-2">
-        <input className="border p-1" placeholder="Nome" value={nova.nome} onChange={(e) => setNova({ ...nova, nome: e.target.value })} />
-        <input className="border p-1" placeholder="Largura" value={nova.largura} onChange={(e) => setNova({ ...nova, largura: e.target.value })} />
-        <input className="border p-1" placeholder="Altura" value={nova.altura} onChange={(e) => setNova({ ...nova, altura: e.target.value })} />
-        <input className="border p-1" placeholder="Qtd" value={nova.quantidade} onChange={(e) => setNova({ ...nova, quantidade: e.target.value })} />
-        <select className="border p-1" value={nova.veio} onChange={(e) => setNova({ ...nova, veio: e.target.value })}>
+      <div className="grid grid-cols-9 gap-2 mb-4">
+        <input className="border p-2" placeholder="Nome" value={nova.nome} onChange={(e) => setNova({ ...nova, nome: e.target.value })} />
+        <input className="border p-2" placeholder="Largura" value={nova.largura} onChange={(e) => setNova({ ...nova, largura: e.target.value })} />
+        <input className="border p-2" placeholder="Altura" value={nova.altura} onChange={(e) => setNova({ ...nova, altura: e.target.value })} />
+        <input className="border p-2" placeholder="Qtd" value={nova.quantidade} onChange={(e) => setNova({ ...nova, quantidade: e.target.value })} />
+        <select className="border p-2" value={nova.veio} onChange={(e) => setNova({ ...nova, veio: e.target.value })}>
           <option value="comprimento">Veio no comprimento</option>
           <option value="largura">Veio na largura</option>
         </select>
-        <select className="border p-1" value={nova.fitaTipo} onChange={(e) => setNova({ ...nova, fitaTipo: e.target.value })}>
+        <select className="border p-2" value={nova.fitaTipo} onChange={(e) => setNova({ ...nova, fitaTipo: e.target.value })}>
           <option>22mm - Branco</option>
           <option>35mm - Cinza</option>
           <option>64mm - Carvalho</option>
         </select>
-        <select className="border p-1" value={nova.chapa} onChange={(e) => setNova({ ...nova, chapa: e.target.value })}>
+        <select className="border p-2" value={nova.chapa} onChange={(e) => setNova({ ...nova, chapa: e.target.value })}>
           <option>2750x1850 - Branco</option>
           <option>2750x1850 - Freijó</option>
           <option>2750x1850 - Cinza 15mm</option>
         </select>
-        <button className="bg-blue-500 text-white px-2" onClick={adicionarPeca}>Adicionar</button>
+        <button className="bg-blue-600 text-white px-3 rounded" onClick={adicionarPeca}>Adicionar</button>
       </div>
 
-      <table className="w-full text-sm border">
-        <thead>
-          <tr className="bg-gray-200">
-            <th className="border p-1">Nome</th>
-            <th className="border p-1">Largura</th>
-            <th className="border p-1">Altura</th>
-            <th className="border p-1">Qtd</th>
-            <th className="border p-1">Veio</th>
-            <th className="border p-1">Fita</th>
-            <th className="border p-1">Chapa</th>
-          </tr>
-        </thead>
-        <tbody>
-          {pecas.map((p, i) => (
-            <tr key={i} className="border">
-              <td className="border p-1">{p.nome}</td>
-              <td className="border p-1">{p.largura}</td>
-              <td className="border p-1">{p.altura}</td>
-              <td className="border p-1">{p.quantidade}</td>
-              <td className="border p-1">{p.veio}</td>
-              <td className="border p-1">{p.fitaTipo}</td>
-              <td className="border p-1">{p.chapa}</td>
+      <div className="overflow-x-auto">
+        <table className="min-w-full text-sm border">
+          <thead>
+            <tr className="bg-gray-100">
+              <th className="p-2 border">Nome</th>
+              <th className="p-2 border">Largura</th>
+              <th className="p-2 border">Altura</th>
+              <th className="p-2 border">Qtd</th>
+              <th className="p-2 border">Veio</th>
+              <th className="p-2 border">Fita</th>
+              <th className="p-2 border">Chapa</th>
+              <th className="p-2 border">Ações</th>
             </tr>
-          ))}
-        </tbody>
-      </table>
+          </thead>
+          <tbody>
+            {pecas.map((p, i) => (
+              <tr key={i} className="border-b hover:bg-gray-50">
+                <td className="p-2 border text-center">{p.nome}</td>
+                <td className="p-2 border text-center">{p.largura}</td>
+                <td className="p-2 border text-center">{p.altura}</td>
+                <td className="p-2 border text-center">{p.quantidade}</td>
+                <td className="p-2 border text-center">{p.veio}</td>
+                <td className="p-2 border text-center">{p.fitaTipo}</td>
+                <td className="p-2 border text-center">{p.chapa}</td>
+                <td className="p-2 border text-center">
+                  <button onClick={() => removerPeca(i)} className="text-red-500 hover:text-red-700">
+                    <Trash2 size={16} />
+                  </button>
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
 
-      <div className="mt-4">
-        <button className="bg-green-600 text-white px-4 py-2" onClick={gerarPlano}>Gerar Plano de Corte</button>
+      <div className="mt-6">
+        <button className="bg-green-600 text-white px-4 py-2 rounded" onClick={gerarPlano}>Gerar Plano de Corte</button>
       </div>
 
       {resposta && (
